@@ -1,11 +1,8 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe SecurerRandomer do
-  it 'has a version number' do
-    expect(SecurerRandomer::VERSION).not_to be nil
-  end
-
-  it 'does something useful' do
-    expect(false).to eq(true)
+  context 'SecurerRandomer::VERSION' do
+    Then { SecurerRandomer.const_defined?(:VERSION) }
+    And { !SecurerRandomer::VERSION.nil? }
   end
 end
