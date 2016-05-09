@@ -1,7 +1,7 @@
 require 'rspec/given'
 
 if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
-  require_relative '../lib/securer_randomer'
+  require 'securer_randomer'
 else
   require 'securerandom'
 end

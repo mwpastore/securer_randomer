@@ -118,6 +118,14 @@ describe SecureRandom do
 
         Then { result == Failure(ArgumentError) }
       end
+
+      context 'rejects inverted ranges' do
+        When(:result) { described_class.random_number(0..-1) }
+
+        Then { result.is_a?(Float) }
+        And { result >= 0 }
+        And { result < 1 }
+      end
     end if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.3.0'))
   end
 

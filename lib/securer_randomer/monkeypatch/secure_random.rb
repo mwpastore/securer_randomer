@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'rbnacl/sodium'
-require 'rbnacl/util'
-require 'rbnacl/random'
+require 'securerandom'
 
 module SecureRandom
   RUBY_VER_OBJ = Gem::Version.new(RUBY_VERSION.dup)
@@ -21,19 +19,21 @@ module SecureRandom
 
   if RUBY_GE_2_3
     def self.random_number(n = 0)
-      case n
-      when nil
-        Kernel.rand
-      when Range
-        raise ArgumentError, "invalid argument - #{n}" \
-          unless n.begin.is_a?(Numeric) and n.end.is_a?(Numeric)
+      arg =
+        case n
+        when nil
+          0
+        when Range
+          n.end < n.begin ? 0 : n
+        when Numeric
+          n > 0 ? n : 0
+        end
 
-        Kernel.rand(n)
-      when Numeric
-        Kernel.rand(n > 0 ? n : 0)
-      else
-        raise ArgumentError, "invalid argument - #{n}"
-      end
+      raise TypeError unless arg
+
+      SecurerRandomer.rand(arg, true)
+    rescue TypeError
+      raise ArgumentError, "invalid argument - #{n}"
     end
   else
     def self.random_number(n = 0)
@@ -46,7 +46,7 @@ module SecureRandom
         end
       end
 
-      Kernel.rand(n > 0 ? n : 0)
+      SecurerRandomer.rand(n > 0 ? n : 0, true)
     end
   end
 end
