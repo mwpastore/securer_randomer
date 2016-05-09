@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mike Pastore']
   spec.email         = ['mike@oobak.org']
 
-  spec.summary       = 'Monkeypatch SecureRandom (and Kernel.rand) with RbNaCl'
+  spec.summary       = 'Monkeypatch SecureRandom with RbNaCl'
   spec.homepage      = 'https://github.com/mwpastore/securer_randomer'
   spec.license       = 'MIT'
 
