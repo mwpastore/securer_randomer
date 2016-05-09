@@ -16,9 +16,15 @@ module SecureRandom
   end
 
   def self.random_number(n = 0)
-    # mimic exception raised by "stock" SecureRandom
+    # mimic exceptions raised by "stock" SecureRandom
     raise ArgumentError, "comparison of Fixnum with #{n} failed" unless n.is_a?(Numeric)
-    raise TypeError, "Cannot convert into OpenSSL::BN" if n.is_a?(Float) && n > 0
+    if n.is_a?(Float) && n > 0
+      if defined?(OpenSSL::BN) && Float.instance_method(:to_s).arity > 0
+        raise TypeError, "Cannot convert into OpenSSL::BN"
+      else
+        raise ArgumentError, 'wrong number of arguments'
+      end
+    end
 
     Kernel.rand(n > 0 ? n : 0)
   end

@@ -36,8 +36,9 @@ describe SecureRandom do
 
     context 'rejects positive floats' do
       When(:result) { described_class.random_number(0.1) }
+      When(:error_class) { defined?(OpenSSL::BN) && Float.instance_method(:to_s).arity > 0 ? TypeError : ArgumentError }
 
-      Then { result == Failure(TypeError) }
+      Then { result == Failure(error_class) }
     end
 
     context 'rejects ranges' do
