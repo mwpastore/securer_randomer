@@ -19,7 +19,7 @@ module SecureRandom
     # mimic exceptions raised by "stock" SecureRandom
     raise ArgumentError, "comparison of Fixnum with #{n} failed" unless n.is_a?(Numeric)
     if n.is_a?(Float) && n > 0
-      if defined?(OpenSSL::BN) && Float.instance_method(:to_s).arity > 0
+      if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.2.0'))
         raise TypeError, "Cannot convert into OpenSSL::BN"
       else
         raise ArgumentError, 'wrong number of arguments'

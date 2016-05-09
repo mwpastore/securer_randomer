@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/mwpastore/securer_randomer.svg?branch=master)](https://travis-ci.org/mwpastore/securer_randomer)
 [![Gem Version](https://badge.fury.io/rb/securer_randomer.svg)](https://badge.fury.io/rb/securer_randomer)
 
-Ruby's SecureRandom chains OpenSSL and 
+Ruby's SecureRandom prefers OpenSSL over 
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's Gemfile to monkeypatch both SecureRandom and Kernel:
 
 ```ruby
 gem 'securer_randomer'

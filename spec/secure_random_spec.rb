@@ -7,7 +7,7 @@ describe SecureRandom do
 
       Then { source_location }
       And { source_location.first =~ %r{lib/securer_randomer/monkeypatch/secure_random\.rb$} }
-    end
+    end if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
 
     context 'returns random bytes' do
       When(:forty_bytes) { described_class.gen_random(40) }
@@ -16,7 +16,7 @@ describe SecureRandom do
       Then { forty_bytes.bytesize == 40 }
       And { forty_bytes != forty_other_bytes }
     end
-  end
+  end if described_class.respond_to?(:gen_random)
 
   context '.random_number' do
     context 'is monkeypatched' do
@@ -24,7 +24,7 @@ describe SecureRandom do
 
       Then { source_location }
       And { source_location.first =~ %r{lib/securer_randomer/monkeypatch/secure_random\.rb$} }
-    end
+    end if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
 
     context 'returns random integers up to but not including n' do
       When(:ints) { Array.new(100) { described_class.random_number(10) } }
@@ -36,7 +36,7 @@ describe SecureRandom do
 
     context 'rejects positive floats' do
       When(:result) { described_class.random_number(0.1) }
-      When(:error_class) { defined?(OpenSSL::BN) && Float.instance_method(:to_s).arity > 0 ? TypeError : ArgumentError }
+      When(:error_class) { Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.2.0')) ? TypeError : ArgumentError }
 
       Then { result == Failure(error_class) }
     end
@@ -84,11 +84,11 @@ describe SecureRandom do
 
       Then { source_location }
       And { source_location.first =~ %r{lib/securer_randomer/monkeypatch/secure_random\.rb$} }
-    end
+    end if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
 
     context 'returns 16 bytes by default' do
-      When(:sixteen_bytes) { described_class.gen_random(16) }
-      When(:sixteen_other_bytes) { described_class.gen_random(16) }
+      When(:sixteen_bytes) { described_class.random_bytes(16) }
+      When(:sixteen_other_bytes) { described_class.random_bytes(16) }
 
       Then { sixteen_bytes.bytesize == 16 }
       And { sixteen_bytes != sixteen_other_bytes }
