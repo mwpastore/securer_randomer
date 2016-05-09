@@ -4,7 +4,7 @@
 [![Gem Version](https://badge.fury.io/rb/securer_randomer.svg)](https://badge.fury.io/rb/securer_randomer)
 
 Ruby's SecureRandom prefers OpenSSL over other mechanisms (such as
-`/dev/urandom` and `getrandom()`). This has recently garnered [some][1]
+`/dev/urandom` and `getrandom(2)`). This has recently garnered [some][1]
 [criticism][2].
 
 [RbNaCl][3] provides Ruby bindings to a portable crypto library
