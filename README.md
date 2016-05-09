@@ -1,5 +1,8 @@
 # SecurerRandomer
 
+[![Build Status](https://travis-ci.org/mwpastore/securer_randomer.svg?branch=master)](https://travis-ci.org/mwpastore/securer_randomer)
+[![Gem Version](https://badge.fury.io/rb/securer_randomer.svg)](https://badge.fury.io/rb/securer_randomer)
+
 Ruby's SecureRandom chains OpenSSL and 
 
 ## Installation

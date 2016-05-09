@@ -76,4 +76,21 @@ describe SecureRandom do
       And { floats.all? { |f| f < 1 } }
     end
   end
+
+  context '.random_bytes' do
+    context 'is monkeypatched' do
+      When(:source_location) { described_class.method(:random_bytes).source_location }
+
+      Then { source_location }
+      And { source_location.first =~ %r{lib/securer_randomer/monkeypatch/secure_random\.rb$} }
+    end
+
+    context 'returns 16 bytes by default' do
+      When(:sixteen_bytes) { described_class.gen_random(16) }
+      When(:sixteen_other_bytes) { described_class.gen_random(16) }
+
+      Then { sixteen_bytes.bytesize == 16 }
+      And { sixteen_bytes != sixteen_other_bytes }
+    end
+  end
 end
