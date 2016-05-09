@@ -38,9 +38,9 @@ module SecureRandom
   else
     def self.random_number(n = 0)
       raise ArgumentError, "comparison of Fixnum with #{n} failed" unless n.is_a?(Numeric)
-      if n.is_a?(Float) && n > 0
+      if n.is_a?(Float) and n > 0
         if RUBY_GE_2_2
-          raise TypeError, "Cannot convert into OpenSSL::BN"
+          raise TypeError, 'Cannot convert into OpenSSL::BN'
         else
           raise ArgumentError, 'wrong number of arguments'
         end

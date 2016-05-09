@@ -8,9 +8,13 @@ require 'securer_randomer/version'
 require 'securer_randomer/monkeypatch/secure_random'
 
 module SecurerRandomer
+  def self.kernel_rand(max = 0)
+    rand(max, true)
+  end
+
   def self.rand(n = 0, emulate_kernel = false)
     if n.is_a?(Range)
-      raise TypeError, "no implicit conversion of Range into Fixnum" \
+      raise TypeError, 'no implicit conversion of Range into Fixnum' \
         unless n.begin.is_a?(Numeric) and n.end.is_a?(Numeric)
 
       if n.end < n.begin
@@ -18,7 +22,8 @@ module SecurerRandomer
           nil
         else
           m = Range.new(n.end, n.begin, false)
-          while true
+
+          while true # TODO: better way to do this than looping?
             q = _rand_range(m)
 
             break q unless n.exclude_end? and q == n.end

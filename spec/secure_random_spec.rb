@@ -62,13 +62,11 @@ describe SecureRandom do
 
     context 'in ruby 2.3+' do
       context 'ignores nil' do
-        Given(:samples) { [nil] }
+        When(:result) { described_class.random_number(nil) }
 
-        When(:floats) { samples.map { |i| described_class.random_number(i) } }
-
-        Then { floats.all? { |f| f.is_a?(Float) } }
-        And { floats.all? { |f| f >= 0 } }
-        And { floats.all? { |f| f < 1 } }
+        Then { result.is_a?(Float) }
+        And { result >= 0 }
+        And { result < 1 }
       end
 
       context 'returns random integers in an inclusive range' do

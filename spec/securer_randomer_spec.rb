@@ -8,7 +8,7 @@ describe SecurerRandomer do
 end
 
 describe SecurerRandomer do
-  context ".rand" do
+  context '.rand' do
     context 'dwim with an inverted range' do
       When(:results) { Array.new(100) { described_class.rand(0...-10) } }
 
@@ -34,7 +34,7 @@ describe SecurerRandomer do
     end
   end if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
 
-  context ".kernel_rand" do
+  context '.kernel_rand' do
     Given(:method) do
       if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
         proc { |arg| described_class.rand(arg, true) }
