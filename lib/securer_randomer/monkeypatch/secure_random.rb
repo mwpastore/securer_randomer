@@ -44,7 +44,7 @@ module SecureRandom
       raise ArgumentError, "comparison of Fixnum with #{n} failed" unless n.is_a?(Numeric)
       raise FLOAT_ERROR if n.is_a?(Float) and n > 0
 
-      KERNEL_RAND.call(n > 0 ? n : 0, true)
+      KERNEL_RAND.call(n > 0 ? n : 0)
     end
   end
 end
