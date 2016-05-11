@@ -3,7 +3,10 @@ require 'rspec/given'
 if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
   require 'securer_randomer'
 
-  Object.send(:remove_const, :OpenSSL)
+  begin
+    Object.send(:remove_const, :OpenSSL)
+  rescue NameError
+  end
 else
   require 'securerandom'
 end

@@ -19,7 +19,15 @@ describe SecureRandom do
 
     context 'rejects positive floats' do
       When(:result) { described_class.random_number(0.1) }
-      When(:error_class) { Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.2.0')) ? TypeError : ArgumentError }
+      When(:error_class) do
+        if defined?(JRUBY_VERSION)
+          ArgumentError
+        elsif Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.2.0'))
+          TypeError
+        else
+          ArgumentError
+        end
+      end
 
       Then { result == Failure(error_class) }
     end unless Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.3.0'))
@@ -161,7 +169,7 @@ describe SecureRandom do
       Then { forty_bytes.bytesize == 40 }
       And { forty_bytes != forty_other_bytes }
     end
-  end if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.2.0'))
+  end if described_class.respond_to?(:gen_random)
 
   context '.random_bytes' do
     context 'is monkeypatched' do
@@ -178,5 +186,5 @@ describe SecureRandom do
       Then { sixteen_bytes.bytesize == 16 }
       And { sixteen_bytes != sixteen_other_bytes }
     end
-  end unless Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.2.0'))
+  end unless described_class.respond_to?(:gen_random)
 end

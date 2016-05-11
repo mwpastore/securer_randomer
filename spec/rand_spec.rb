@@ -68,7 +68,11 @@ describe SecurerRandomer do
 
       When(:results) { samples.map { |i| method.call(i...i) } }
 
-      Then { results.all? { |i| i.nil? } }
+      if defined?(JRUBY_VERSION)
+        Then { results == Failure(ArgumentError) }
+      else
+        Then { results.all? { |i| i.nil? } }
+      end
     end
 
     context 'returns random integers in an inclusive range' do
@@ -115,13 +119,21 @@ describe SecurerRandomer do
     context 'rejects weirder input' do
       When(:result) { method.call('a'..'b') }
 
-      Then { result == Failure(TypeError) }
+      if defined?(JRUBY_VERSION)
+        Then { result == Failure(NoMethodError) }
+      else
+        Then { result == Failure(TypeError) }
+      end
     end
 
     context 'rejects inverted ranges' do
       When(:result) { method.call(0..-1) }
 
-      Then { result.nil? }
+      if defined?(JRUBY_VERSION)
+        Then { result == Failure(ArgumentError) }
+      else
+        Then { result.nil? }
+      end
     end
 
     context 'has default behavior' do

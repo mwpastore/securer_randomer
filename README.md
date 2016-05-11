@@ -92,7 +92,7 @@ Or install it yourself as:
 ## Compatibility
 
 SecurerRandomer has been tested under MRI/YARV versions 1.9.3, 2.0, 2.1, 2.2,
-and 2.3.
+and 2.3, and JRuby 1.7 and 9.0 (both under Oracle Java 8).
 
 ## DISCLAIMER
 

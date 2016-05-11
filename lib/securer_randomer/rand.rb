@@ -7,11 +7,18 @@ module SecurerRandomer
 
   def self.rand(n = 0, emulate_kernel = false)
     if n.is_a?(Range)
-      raise TypeError, 'no implicit conversion of Range into Fixnum' \
-        unless n.begin.is_a?(Numeric) and n.end.is_a?(Numeric)
+      unless n.begin.is_a?(Numeric) and n.end.is_a?(Numeric)
+        if emulate_kernel and defined?(JRUBY_VERSION)
+          raise NoMethodError, "undefined method `-' for \"#{n.end}\""
+        else
+          raise TypeError, 'no implicit conversion of Range into Fixnum'
+        end
+      end
 
       if n.end < n.begin
         if emulate_kernel
+          raise ArgumentError, "invalid argument - #{n}" if defined?(JRUBY_VERSION)
+
           nil
         else
           m = Range.new(n.end, n.begin, false)
@@ -23,6 +30,8 @@ module SecurerRandomer
           end
         end
       elsif n.begin == n.end and n.exclude_end?
+        raise ArgumentError, "invalid argument - #{n}" if emulate_kernel and defined?(JRUBY_VERSION)
+
         nil
       else
         _rand_range(n)
