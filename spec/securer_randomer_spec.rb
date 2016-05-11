@@ -54,6 +54,23 @@ describe SecurerRandomer do
       And { results.all? { |i| i < 10 } }
     end
 
+    context 'returns range.begin in inclusive noop range' do
+      Given(:samples) { [0, 0.0, 1, 1.0, -1, -1.0] }
+
+      When(:results) { samples.map { |i| [i, method.call(i..i)] } }
+
+      Then { results.all? { |i| i.first.class == i.last.class } }
+      And { results.all? { |i| i.first === i.last } }
+    end
+
+    context 'returns nil in exclusive noop range' do
+      Given(:samples) { [0, 0.0, 1, 1.0, -1, -1.0] }
+
+      When(:results) { samples.map { |i| method.call(i...i) } }
+
+      Then { results.all? { |i| i.nil? } }
+    end
+
     context 'returns random integers in an inclusive range' do
       When(:results) { Array.new(100) { method.call(4..10) } }
 

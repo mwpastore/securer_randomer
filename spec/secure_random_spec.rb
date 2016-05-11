@@ -124,6 +124,25 @@ describe SecureRandom do
         And { result >= 0 }
         And { result < 1 }
       end
+
+      context 'returns range.begin in inclusive noop range' do
+        Given(:samples) { [0, 0.0, 1, 1.0, -1, -1.0] }
+
+        When(:results) { samples.map { |i| [i, described_class.random_number(i..i)] } }
+
+        Then { results.all? { |i| i.first.class == i.last.class } }
+        And { results.all? { |i| i.first === i.last } }
+      end
+
+      context 'rejects noop ranges' do
+        Given(:samples) { [0, 0.0, 1, 1.0, -1, -1.0] }
+
+        When(:results) { samples.map { |i| described_class.random_number(i...i) } }
+
+        Then { results.all? { |f| f.is_a?(Float) } }
+        And { results.all? { |f| f >= 0 } }
+        And { results.all? { |f| f < 1 } }
+      end
     end if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new(String.new('2.3.0'))
   end
 

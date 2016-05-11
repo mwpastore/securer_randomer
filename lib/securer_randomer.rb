@@ -29,6 +29,8 @@ module SecurerRandomer
             break q unless n.exclude_end? and q == n.end
           end
         end
+      elsif n.size == 0
+        nil
       else
         _rand_range(n)
       end
