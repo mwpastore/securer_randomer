@@ -34,8 +34,25 @@ SecureRandom`.random_number` between Ruby versions. For example:
   2.2+, but SecureRandom`.random_number` throws an ArgumentError in Ruby 2.2
   and returns a float `n` such that `0.0 <= n < 1.0` in Ruby 2.3
 
-Tests started to accumulate so I decided it was probably a good idea to gemify
-this!
+Branching logic and tests started to accumulate so I decided it was probably a
+good idea to gemify this!
+
+### Why a monkeypatch?
+
+The concept of monkeypatching in Ruby is a sensitive subject. It has the
+potential to break things in unexpected ways and make Ruby code more difficult
+to troubleshoot, and it's these kinds of practices that give Ruby (and
+Rubyists) a bad name. It was actually way more labor-intensive to write this as
+a monkeypatch rather than landing it as a completely separate module. So why?
+
+Simply put, I do not anticipate this gem being a long-term solution! At some
+point in the hopefully-near future I would like to see the Ruby core team
+acquiesce to community pressure and modify `securerandom.rb` and `random.c` to
+not utilize OpenSSL and prefer `getrandom(2)` over `urandom`. And so my goal
+was not to write some super-maintainable, standalone piece of software, but
+rather a temporary fix that can be easily dropped into an existing project and
+easily pulled out at a later date. A monkeypatch is the easiest way to achieve
+this.
 
 ## Features
 
