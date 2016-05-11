@@ -7,25 +7,27 @@ Ruby's SecureRandom prefers OpenSSL over other mechanisms (such as
 `/dev/urandom` and `getrandom(2)`). This has recently garnered [some][1]
 [criticism][2].
 
-[RbNaCl][3] provides Ruby bindings to a portable crypto library
-([libsodium][4]) that includes an alternative, OpenSSL-free pseudo-random
-number generator (PRNG) implementation.
+[RbNaCl][3] provides Ruby bindings to [libsodium][4], a portable crypto
+library&mdash;which is a fork of [NaCl][6] by Daniel J. Bernstein&mdash;that
+includes hooks to alternative, OpenSSL-free pseudo-random number generators
+(PRNGs) such as `getrandom(2)` on modern Linux kernels and `RtlGenRandom()` on
+Windows.
 
 This gem monkeypatches RbNaCl into SecureRandom and aims to be "bug-for-bug"
 compatible with the "stock" implementation of SecureRandom across Ruby
-versions. It also provides a nice "do what I mean" random number method that
+versions. It also provides a bonus "do what I mean" random number method that
 can be used instead of Kernel`.rand` and SecureRandom`.random_number`.
 
 ## History
 
 This gem started out as a very simple monkeypatch to
-SecureRandom`.random_bytes` and grew as I dug deeper. In newer Rubies, you need
-to patch `.gen_random` instead of `.random_bytes`, and it has no default byte
-size.
+SecureRandom`.random_bytes` and grew as I dug deeper. In newer rubies, for
+example, you need to patch `.gen_random` instead of `.random_bytes`, and it has
+a different calling signature.
 
-Generating random numbers proved to be rather tricky due to inconsistencies
-between the implementations and functionality of Kernel`.rand` and
-SecureRandom`.random_number` between Ruby versions. For example:
+Generating random numbers proved to be rather tricky due to inconsistencies of
+of Kernel`.rand` and SecureRandom`.random_number` between Ruby implementations
+and versions. For example:
 
 * `Kernel.rand(nil)` and `SecureRandom.random_number(nil)` both return a float
   `n` such that `0.0 <= n < 1.0` in Ruby 2.3; but
@@ -51,7 +53,7 @@ acquiesce to community pressure and modify `securerandom.rb` and `random.c` to
 not utilize OpenSSL and prefer `getrandom(2)` over `urandom`. And so my goal
 was not to write some super-maintainable, standalone piece of software, but
 rather a temporary fix that can be easily dropped into an existing project and
-easily pulled out at a later date. A monkeypatch is the easiest way to achieve
+easily pulled out at a later date. A monkeypatch is the best way to achieve
 this.
 
 ## Features
@@ -146,3 +148,4 @@ The gem is available as open source under the terms of the [MIT License](http://
 [3]: https://github.com/cryptosphere/rbnacl
 [4]: https://github.com/jedisct1/libsodium
 [5]: https://github.com/cryptosphere/rbnacl-libsodium
+[6]: http://nacl.cr.yp.to
