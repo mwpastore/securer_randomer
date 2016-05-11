@@ -17,6 +17,8 @@ module SecureRandom
         case n
         when nil
           0
+        when Numeric
+          n > 0 ? n : 0
         when Range
           if n.end < n.begin
             0
@@ -25,8 +27,6 @@ module SecureRandom
           else
             n
           end
-        when Numeric
-          n > 0 ? n : 0
         end
 
       raise TypeError unless arg
