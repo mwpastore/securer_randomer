@@ -3,11 +3,7 @@
 require 'securerandom'
 
 module SecureRandom
-  RUBY_VER_OBJ = Gem::Version.new(RUBY_VERSION.dup)
-  RUBY_GE_2_2 = RUBY_VER_OBJ >= Gem::Version.new(String.new('2.2.0'))
-  RUBY_GE_2_3 = RUBY_VER_OBJ >= Gem::Version.new(String.new('2.3.0'))
-
-  if RUBY_GE_2_2
+  if respond_to?(:gen_random)
     def self.gen_random(n)
       RbNaCl::Random.random_bytes(n)
     end
@@ -17,7 +13,7 @@ module SecureRandom
     end
   end
 
-  if RUBY_GE_2_3
+  if (random_number(nil) rescue nil)
     def self.random_number(n = 0)
       arg =
         case n
@@ -36,15 +32,11 @@ module SecureRandom
       raise ArgumentError, "invalid argument - #{n}"
     end
   else
+    FLOAT_ERROR = begin random_number(1.0); rescue => e; e end
+
     def self.random_number(n = 0)
       raise ArgumentError, "comparison of Fixnum with #{n} failed" unless n.is_a?(Numeric)
-      if n.is_a?(Float) and n > 0
-        if RUBY_GE_2_2
-          raise TypeError, 'Cannot convert into OpenSSL::BN'
-        else
-          raise ArgumentError, 'wrong number of arguments'
-        end
-      end
+      raise FLOAT_ERROR if n.is_a?(Float) and n > 0
 
       SecurerRandomer.rand(n > 0 ? n : 0, true)
     end
