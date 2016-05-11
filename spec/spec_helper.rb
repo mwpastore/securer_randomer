@@ -1,7 +1,13 @@
 require 'rspec/given'
 
-if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
+if %w[true kinda].include? ENV.fetch('WITH_MONKEYPATCH', 'true')
   require 'securer_randomer'
+
+  if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'kinda'
+    ENV['WITH_MONKEYPATCH'] = 'true'
+
+    SecurerRandomer::KERNEL_RAND = Kernel.method(:rand)
+  end
 
   begin
     Object.send(:remove_const, :OpenSSL)

@@ -28,11 +28,11 @@ between the implementations and functionality of Kernel`.rand` and
 SecureRandom`.random_number` between Ruby versions. For example:
 
 * `Kernel.rand(nil)` and `SecureRandom.random_number(nil)` both return a float
-  such that `{ 0.0 <= n < 1.0 }` in Ruby 2.3; but
+  `n` such that `0.0 <= n < 1.0` in Ruby 2.3; but
   `SecureRandom.random_number(nil)` throws an ArgumentError in Ruby 2.2
 * Kernel`.rand` with an inverted range (e.g. `0..-10`) returns `nil` in Ruby
   2.2+, but SecureRandom`.random_number` throws an ArgumentError in Ruby 2.2
-  and returns a float such that `{ 0.0 <= n < 1.0 }` in Ruby 2.3
+  and returns a float `n` such that `0.0 <= n < 1.0` in Ruby 2.3
 
 Tests started to accumulate so I decided it was probably a good idea to gemify
 this!
@@ -41,33 +41,40 @@ this!
 
 * SecureRandom`.gen_random` (or `.random_bytes`)
 
-Monkeypatches SecureRandom such that its various formatter methods (`.uuid`,
-`.hex`, `.base64`, `.urlsafe_base64`, and `.random_bytes`) use RbNaCl for random
-byte generation instead of OpenSSL.
+  Monkeypatches SecureRandom such that its various formatter methods (`.uuid`,
+  `.hex`, `.base64`, `.urlsafe_base64`, and `.random_bytes`) use RbNaCl for random
+  byte generation instead of OpenSSL.
 
 * SecureRandom`.random_number`
 
-Monkeypatches SecureRandom such that it uses SecurerRandomer`.kernel_rand`
-instead of OpenSSL (or Kernel`.rand`) to generate random numbers from numeric
-types and ranges. It is bug-for-bug compatible with "stock" SecureRandom,
-meaning it "chokes" on the same inputs and throws the same exception types.
+  Monkeypatches SecureRandom such that it uses SecurerRandomer`.kernel_rand`
+  instead of OpenSSL to generate random numbers from numeric types and ranges. It
+  is bug-for-bug compatible with "stock" SecureRandom, meaning it "chokes" on the
+  same inputs and throws the same exception types.
+
+  If you prefer to use Kernel`.rand` instead of SecurerRandomer`.kernel_rand`,
+  add this statement to your bootup process after requiring SecurerRandomer:
+
+  ```ruby
+  SecurerRandomer::KERNEL_RAND = Kernel.method(:rand)
+  ```
 
 * SecurerRandomer`.kernel_rand`
 
-A bug-for-bug reimplementation of Kernel`.rand`&mdash;meaning it "chokes" on
-the same inputs and throws the same exception types&mdash;that uses RbNaCl as
-its source of entropy.
+  A bug-for-bug reimplementation of Kernel`.rand`&mdash;meaning it "chokes" on
+  the same inputs and throws the same exception types&mdash;that uses RbNaCl as
+  its source of entropy.
 
 * SecurerRandomer`.rand`
 
-An idealistic, "do what I mean" random number method that accepts a variety of
-inputs and returns what you might expect. Whereas `Kernel.rand(-5.6)` returns
-an integer such that `{ 0 <= n < 5 }` and `SecureRandom.random_number(-5.6)`
-returns a float such that `{ 0.0 <= n < 1.0 }`, **`SecurerRandomer.rand(-5.6)`
-returns a float such that `{ 0 >= n > -5.6 }`**. Whereas `Kernel.rand(10..0)`
-returns `nil` and `SecureRandom.random_number(10..0)` returns a float such that
-`{ 0.0 <= n < 1.0 }` (in Ruby 2.3), **`SecurerRandomer.rand(10..0)` returns an
-integer such that `{ 10 >= n >= 0 }`**.
+  An idealistic, "do what I mean" random number method that accepts a variety of
+  inputs and returns what you might expect. Whereas `Kernel.rand(-5.6)` returns
+  an integer `n` such that `0 <= n < 5` and `SecureRandom.random_number(-5.6)`
+  returns a float `n` such that `0.0 <= n < 1.0`, **`SecurerRandomer.rand(-5.6)`
+  returns a float `n` such that `0 >= n > -5.6`**. Whereas `Kernel.rand(10..0)`
+  returns `nil` and `SecureRandom.random_number(10..0)` returns a float `n` such
+  that `0.0 <= n < 1.0` (in Ruby 2.3), **`SecurerRandomer.rand(10..0)` returns an
+  integer `n` such that `10 >= n >= 0`**.
 
 ## Installation
 
@@ -100,9 +107,8 @@ and 2.3, and JRuby 1.7 and 9.0 (both under Oracle Java 8).
 
 I am neither a cryptologist nor a cryptographer. Although I'm fairly confident
 in the test suite, serious bugs affecting compatibility, randomness, and
-performance may be present. If you're cautious, I would recommend using the
-monkeypatched SecureRandom formatter methods for random data and Kernel`.rand`
-for random numbers. Bug reports are welcome.
+performance may be present. If you're cautious, I would recommend setting
+`SecurerRandomer::KERNEL_RAND = Kernel.method(:rand)` as described above.
 
 ## Development
 

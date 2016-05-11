@@ -19,3 +19,4 @@ before_install:
 env:
   - WITH_MONKEYPATCH=false
   - WITH_MONKEYPATCH=true
+  - WITH_MONKEYPATCH=kinda

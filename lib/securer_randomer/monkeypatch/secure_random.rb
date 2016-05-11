@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module SecureRandom
+  KERNEL_RAND = SecurerRandomer.method(:kernel_rand)
+
   if respond_to?(:gen_random)
     def self.gen_random(n)
       RbNaCl::Random.random_bytes(n)
@@ -31,7 +33,7 @@ module SecureRandom
 
       raise TypeError unless arg
 
-      SecurerRandomer.rand(arg, true)
+      KERNEL_RAND.call(arg)
     rescue TypeError
       raise ArgumentError, "invalid argument - #{n}"
     end
@@ -42,7 +44,7 @@ module SecureRandom
       raise ArgumentError, "comparison of Fixnum with #{n} failed" unless n.is_a?(Numeric)
       raise FLOAT_ERROR if n.is_a?(Float) and n > 0
 
-      SecurerRandomer.rand(n > 0 ? n : 0, true)
+      KERNEL_RAND.call(n > 0 ? n : 0, true)
     end
   end
 end
