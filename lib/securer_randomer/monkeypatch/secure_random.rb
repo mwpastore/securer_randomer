@@ -20,7 +20,13 @@ module SecureRandom
         when nil
           0
         when Range
-          (n.end < n.begin or n.size == 0) ? 0 : n
+          if n.end < n.begin
+            0
+          elsif n.begin == n.end and n.exclude_end?
+            0
+          else
+            n
+          end
         when Numeric
           n > 0 ? n : 0
         end
