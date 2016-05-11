@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'securerandom'
-
 module SecureRandom
   if respond_to?(:gen_random)
     def self.gen_random(n)
