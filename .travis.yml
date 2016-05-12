@@ -18,5 +18,5 @@ before_install:
   - sudo apt-get install -y libsodium-dev
 env:
   - WITH_MONKEYPATCH=false
-  - WITH_MONKEYPATCH=true
-  - WITH_MONKEYPATCH=kinda
+  - WITH_MONKEYPATCH=true WITH_RAND=custom
+  - WITH_MONKEYPATCH=true WITH_RAND=kernel

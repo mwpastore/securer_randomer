@@ -1,11 +1,9 @@
 require 'rspec/given'
 
-if %w[true kinda].include? ENV.fetch('WITH_MONKEYPATCH', 'true')
+if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'true'
   require 'securer_randomer'
 
-  if ENV.fetch('WITH_MONKEYPATCH', 'true') == 'kinda'
-    ENV['WITH_MONKEYPATCH'] = 'true'
-
+  if ENV.fetch('WITH_RAND', 'custom') == 'kernel'
     SecurerRandomer::KERNEL_RAND = Kernel.method(:rand)
   end
 
