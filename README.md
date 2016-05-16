@@ -7,11 +7,10 @@ Ruby's SecureRandom prefers OpenSSL over other mechanisms (such as
 `/dev/urandom` and `getrandom(2)`). This has recently garnered [some][1]
 [criticism][2].
 
-[RbNaCl][3] provides Ruby bindings to [libsodium][4], a portable crypto
-library&mdash;which is a fork of [NaCl][6] by Daniel J. Bernstein&mdash;that
-includes hooks to alternative, OpenSSL-free pseudo-random number generators
-(PRNGs) such as `getrandom(2)` on modern Linux kernels and `RtlGenRandom()` on
-Windows.
+[RbNaCl][3] provides Ruby bindings to [libsodium][4]&mdash;a portable crypto
+library and fork of [NaCl][6] by Daniel J. Bernstein that includes hooks to
+alternative, OpenSSL-free pseudo-random number generators (PRNGs) such as
+`getrandom(2)` on modern Linux kernels and `RtlGenRandom()` on Windows.
 
 This gem monkeypatches RbNaCl into SecureRandom and aims to be "bug-for-bug"
 compatible with the "stock" implementation of SecureRandom across Ruby
