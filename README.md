@@ -25,9 +25,10 @@ SecureRandom`.random_bytes` and grew as I dug deeper. In newer rubies, for
 example, you need to patch `.gen_random` instead of `.random_bytes`, and it has
 a different calling signature.
 
-Generating random numbers proved to be rather tricky due to inconsistencies of
-of Kernel`.rand` and SecureRandom`.random_number` between Ruby implementations
-and versions. For example:
+Some rubies use OpenSSL for SecureRandom`.random_number` as well, while others
+appear to rely on Kernel`.rand`. Addressing this proved to be tricky due to
+inconsistencies of these two methods between Ruby implementations and versions.
+For example:
 
 * `Kernel.rand(nil)` and `SecureRandom.random_number(nil)` both return a float
   `n` such that `0.0 <= n < 1.0` in Ruby 2.3; but
@@ -36,8 +37,8 @@ and versions. For example:
   2.2+, but SecureRandom`.random_number` throws an ArgumentError in Ruby 2.2
   and returns a float `n` such that `0.0 <= n < 1.0` in Ruby 2.3
 
-Branching logic and tests started to accumulate so I decided it was probably a
-good idea to gemify this!
+Branching logic, edge cases, and tests started to accumulate so I decided it
+was probably a good idea to gemify this!
 
 ### Why a monkeypatch?
 
