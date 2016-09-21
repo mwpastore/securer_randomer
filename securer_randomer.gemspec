@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mike Pastore']
   spec.email         = ['mike@oobak.org']
 
-  spec.summary       = 'Monkeypatch SecureRandom with RbNaCl'
+  spec.summary       = '[DEPRECATED] Monkeypatch Ruby\'s SecureRandom with RbNaCl'
+  spec.summary       = 'This gem is deprecated. Please use sysrandom instead.'
   spec.homepage      = 'https://github.com/mwpastore/securer_randomer'
   spec.license       = 'MIT'
 

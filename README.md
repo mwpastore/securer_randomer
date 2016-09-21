@@ -1,5 +1,7 @@
 # SecurerRandomer
 
+## This gem is deprecated. Please use [sysrandom](https://github.com/cryptosphere/sysrandom) instead.
+
 [![Build Status](https://travis-ci.org/mwpastore/securer_randomer.svg?branch=master)](https://travis-ci.org/mwpastore/securer_randomer)
 [![Gem Version](https://badge.fury.io/rb/securer_randomer.svg)](https://badge.fury.io/rb/securer_randomer)
 
